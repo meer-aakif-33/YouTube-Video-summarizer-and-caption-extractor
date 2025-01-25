@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YouTube Video Summarizer</title>
+    <script>
+        async function summarizeVideo(event) {
+            event.preventDefault()
+            const youtube_link = document.getElementById('youtube_link').value;
+            const responsediv = document.getElementById('response');
+            if(!youtube_link){
+                responsediv.innerHTML = 'Please provide a Youtube Video Link';
+                return;
+            }
+            try{
+
+                const response = await fetch('/get-summarise', {
+                    method:'POST',
+                    headers:{
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({youtube_link:youtube_link}),
+                })
+                if (response.ok){
+                    const data = await response.json();
+                    responsediv.innerHTML = `<p>Summary: ${data.summary}</p>`
+                } else {
+                    responsediv.innerHTML = `<p>Error: ${response.statusText}</p>`
+                }
+
+            } catch (err) {
+                responsediv.innerHTML = `<p>Error: ${err.message}</p>`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Hello Iam under Water</h1>
+    <form id="summaryform" onsubmit="summarizeVideo(event)">
+        <input type="text" id="youtube_link" name="youtube_link" placeholder="Enter YouTube link">
+        <button type="submit" >Summarise</button>
+    </form>
+    <div id="response" ></div>
+</body>
+</html>
