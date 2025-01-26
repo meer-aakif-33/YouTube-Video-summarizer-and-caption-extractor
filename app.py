@@ -1,10 +1,64 @@
 import os
+import whisper
+from pytube import YouTube
 from flask import Flask, request,render_template, jsonify, redirect
 import re
 from youtube_transcript_api import YouTubeTranscriptApi
 from transformers import BartForConditionalGeneration, BartTokenizer
 from transformers import BartTokenizer, pipeline
+import torch
+import subprocess
+# Load Whisper model
+whisper_model = whisper.load_model("base")  # You can use "small", "medium", or "large" for better accuracy
+
 """ Functions Start """
+print(torch.cuda.is_available())  # Should return True
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"devise is {device}")
+
+def download_audio(video_url, video_id):
+    try:
+        directory_path = os.getcwd()
+        output_dir = os.path.join(directory_path, "Audios")
+        os.makedirs(output_dir, exist_ok=True)
+        output_path = os.path.join(output_dir, f"{video_id}.mp3")
+        
+        # yt-dlp command
+        command = [
+            "yt-dlp", "-x", "--audio-format", "mp3",
+            "-o", output_path, video_url
+        ]
+
+        #or use this if the above command doesn't work
+        # command = [
+        #     "python", "-m", "yt_dlp", "-x", "--audio-format", "mp3",
+        #     "-o", output_path, video_url
+        # ]
+        
+        print(f"Running command: {' '.join(command)}")
+        
+        # Run the command and capture output
+        process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        # print("STDOUT:", process.stdout)
+        # print("STDERR:", process.stderr)
+        # process.check_returncode()
+        
+        if not os.path.exists(output_path):
+            raise FileNotFoundError(f"Audio file not created at {output_path}")
+        
+        return output_path
+    except Exception as e:
+        print(f"Error downloading audio: {e}")
+        return None
+
+def transcribe_audio(audio_path):
+    try:
+        result = whisper_model.transcribe(audio_path)
+        return result["text"]
+    except Exception as e:
+        print(f"Error transcribing audio: {e}")
+        return None
+
 
 def extract_video_id(youtube_url):
     pattern = r"(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})"
@@ -15,15 +69,24 @@ def extract_video_id(youtube_url):
 
 def get_captions(video_id):
     try:
+        # Attempt to fetch YouTube captions
         transcript = YouTubeTranscriptApi.get_transcript(video_id)
         text = "\n".join([entry['text'] for entry in transcript])
         return text
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"No YouTube captions found, falling back to Whisper: {e}")
+        # If captions are unavailable, use Whisper
+        youtube_url = f"https://www.youtube.com/watch?v={video_id}"
+        audio_path = download_audio(youtube_url, video_id)
+        if audio_path:
+            captions = transcribe_audio(audio_path)
+            os.remove(audio_path)  
+            return captions
+        return "Unable to generate captions."
 
 """ summarising!! Starts """
 model_name = 'facebook/bart-large-cnn'
-model = BartForConditionalGeneration.from_pretrained(model_name)
+model = BartForConditionalGeneration.from_pretrained(model_name).to(device) 
 tokenizer = BartTokenizer.from_pretrained(model_name)
 summarizer = pipeline("summarization", model=model, tokenizer=tokenizer)
 def summarize_text(text):
@@ -34,7 +97,7 @@ def summarize_text(text):
 
     # Function to summarize text
     def summarize_chunk(chunk):
-        inputs = tokenizer.encode(chunk, return_tensors='pt', truncation=True)
+        inputs = tokenizer.encode(chunk, return_tensors='pt').to(device)
         summary_ids = model.generate(inputs, max_length=100, min_length=50, do_sample=False)
         summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
         return summary
