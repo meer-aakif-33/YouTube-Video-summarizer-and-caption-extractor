@@ -60,7 +60,7 @@ This is a Flask-based web application that extracts captions from a YouTube vide
 4. Submit a pull request.
 
 ## Authors
-- [Shujath Nawaz]([https://github.com/shujathnawaz](https://github.com/mrranger939))
+- [Shujath Nawaz](https://github.com/mrranger939)
 - [Meer Aakif](https://github.com/meer-aakif-33)
 
 ## License
