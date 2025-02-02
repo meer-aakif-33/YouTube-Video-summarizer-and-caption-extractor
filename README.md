@@ -53,11 +53,24 @@ This is a Flask-based web application that extracts captions from a YouTube vide
   - Request Body: `{ "youtube_link": "<youtube_video_url>" }`
   - Response: `{ "summary": "<summarized_text>", "video_captions": "<full_transcript>" }`
 
+## Future Enhancements
+We plan to add the following features in future updates:
+- **Multi-language Support**: Extend Whisper AI and BART models to support multiple languages.
+- **Keyword Extraction**: Highlight important keywords and topics from the video.
+- **Topic Categorization**: Automatically categorize videos based on their content.
+- **Custom Summary Length**: Allow users to choose short, medium, or long summaries.
+- **Real-time Processing**: Streamline the transcription and summarization process for faster results.
+- **Integration with More AI Models**: Experiment with other AI models like GPT-based summarization.
+- **Browser Extension**: Provide a Chrome/Firefox extension for quick video summarization.
+
 ## Contributing
+We welcome contributions from the community! If you have an idea or improvement, follow these steps:
 1. Fork the repository.
 2. Create a new branch.
 3. Make your changes.
 4. Submit a pull request.
+
+If you'd like to discuss ideas or need guidance, feel free to open an issue. 🚀
 
 ## Authors
 - [Shujath Nawaz](https://github.com/mrranger939)
