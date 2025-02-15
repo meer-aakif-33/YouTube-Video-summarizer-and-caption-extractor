@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div style="display: flex;">
+        <div class="dropdown">
+            <button class="dropbtn"><i class="fa-solid fa-hammer"></i></button>
+            <div class="dropdown-content" id="dropdown-menu">
+                <a href="/" id="option2">Youtube Video Summariser</a>
+                <a href="/text" id="option1"> Text Summariser</a>
+                <a href="/captions" id="option3">Get Video Captions</a>
+            </div>
+        </div>
+        <div class="container">
+            <header>
+                <h2>Text Summarizer</h2>
+                <p>Summarize any text quickly and efficiently!</p>
+            </header>
+            <main>
+                <form id="summaryform" style="display: flex; flex-direction: column; align-items: center;" onsubmit="summarizeText(event)" class="form">
+                    <textarea 
+                        id="text_input" 
+                        name="text_input" 
+                        placeholder="Enter text to summarize..." 
+                        class="textarea"
+                        cols="30"
+                        rows="8"
+                        required
+                        style="margin: 2rem;"
+                    ></textarea>
+                    <button type="submit" style="width: 10rem;" class="btn">Summarize</button>
+                </form>
+                <div id="response" class="response"></div>
+                <div id="loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Fetching summary, please wait...</p>
+                </div>
+            </main>
+            <footer>
+                <p>Developed by Shujath Nawaz, Meer Aakif</p>
+            </footer>
+        </div>
+    </div>
+    <script>
+        async function summarizeText(event) {
+            event.preventDefault();
+            const text_input = document.getElementById('text_input').value;
+            const responsediv = document.getElementById('response');
+            const loadingdiv = document.getElementById('loading');
+            
+            responsediv.innerHTML = "";
+            loadingdiv.style.display = "flex";
+
+            if (!text_input) {
+                loadingdiv.style.display = "none";
+                responsediv.innerHTML = '<p class="error">Please enter text to summarize.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch('/get-text-summary', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text_input }),
+                });
+
+                loadingdiv.style.display = "none";
+
+                if (response.ok) {
+                    const data = await response.json();
+                    responsediv.innerHTML = `<p class="summary"><strong>Summary:</strong> ${data.summary}</p>`;
+                } else {
+                    responsediv.innerHTML = `<p class="error">Error: ${response.statusText}</p>`;
+                }
+            } catch (err) {
+                loadingdiv.style.display = "none";
+                responsediv.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+            }
+        }
+    </script>
+    <style>
+        .dropdown {
+            position: absolute;
+            top: 40%;
+            right: 20%;
+        }
+        .dropbtn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+    </style>
+</body>
+</html>

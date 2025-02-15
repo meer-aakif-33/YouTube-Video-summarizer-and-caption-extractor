@@ -130,6 +130,30 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
+@app.route('/text')
+def textsum():
+    return render_template('textsum.html')
+
+@app.route('/captions')
+def captions():
+    return render_template('captions.html')
+
+@app.post('/get-captions')
+def getCaptions():
+    data = request.get_json()
+    youtube_link = data.get('youtube_link')
+    video_id = extract_video_id(youtube_link)
+    video_captions = get_captions(video_id)
+    return jsonify({"video_captions": video_captions })
+
+@app.post('/get-text-summary')
+def text_summarise():
+    data = request.get_json()
+    text = data.get('text_input')
+    summary = summarize_text(text)
+    return jsonify({"summary": summary })
+
+
 @app.post('/get-summarise')
 def do_summarise():
     data = request.get_json()

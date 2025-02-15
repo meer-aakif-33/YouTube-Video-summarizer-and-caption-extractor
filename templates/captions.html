@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Captions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div style="display: flex;">
+        <div class="dropdown">
+            <button class="dropbtn"><i class="fa-solid fa-hammer"></i></button>
+            <div class="dropdown-content" id="dropdown-menu">
+                <a href="/" id="option2">Youtube Video Summariser</a>
+                <a href="/text" id="option1"> Text Summariser</a>
+                <a href="/captions" id="option3">Get Video Captions</a>
+            </div>
+        </div>
+        <div class="container">
+            <header>
+                <h2>YouTube Video Captions</h2>
+                <p>Retrieve the captions of any YouTube video!</p>
+            </header>
+            <main>
+                <form id="captionsform" onsubmit="getCaptions(event)" class="form">
+                    <input 
+                        type="text" 
+                        id="youtube_link" 
+                        name="youtube_link" 
+                        placeholder="Enter YouTube video link" 
+                        class="input"
+                        required
+                    >
+                    <button type="submit" class="btn">Get Captions</button>
+                </form>
+                <div id="response" class="response"></div>
+                <div id="loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Fetching captions, please wait...</p>
+                </div>
+                <div id="video-captions" class="video-captions"></div>
+            </main>
+            <footer>
+                <p>Developed by Shujath Nawaz, Meer Aakif</p>
+            </footer>
+        </div>
+    </div>
+    <script>
+        async function getCaptions(event) {
+            event.preventDefault();
+            const youtube_link = document.getElementById('youtube_link').value;
+            const captionsdiv = document.getElementById('video-captions');
+            const loadingdiv = document.getElementById('loading');
+
+            captionsdiv.innerHTML = "";
+            loadingdiv.style.display = "flex";
+
+            if (!youtube_link) {
+                loadingdiv.style.display = "none";
+                captionsdiv.innerHTML = '<p class="error">Please provide a valid YouTube video link.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch('/get-captions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ youtube_link }),
+                });
+
+                loadingdiv.style.display = "none";
+
+                if (response.ok) {
+                    const data = await response.json();
+                    renderCaptions(data.video_captions);
+                } else {
+                    captionsdiv.innerHTML = `<p class="error">Error: ${response.statusText}</p>`;
+                }
+            } catch (err) {
+                loadingdiv.style.display = "none";
+                captionsdiv.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+            }
+        }
+
+        function renderCaptions(captions) {
+            const captionsdiv = document.getElementById('video-captions');
+            if (!captions) return;
+
+            let shortText = captions.substring(0, 100);
+            let fullText = captions;
+            let isExpanded = false;
+            
+            captionsdiv.innerHTML = `
+                <p class="captions"><strong>Video Captions:</strong> 
+                    <span id="caption-text">${shortText}</span>
+                </p>
+                <button id="toggle-btn" class="btn" onclick="toggleCaptions()">Show More</button>
+            `;
+
+            window.toggleCaptions = function() {
+                const captionText = document.getElementById('caption-text');
+                const toggleBtn = document.getElementById('toggle-btn');
+                if (isExpanded) {
+                    captionText.textContent = shortText;
+                    toggleBtn.textContent = "Show More";
+                } else {
+                    captionText.textContent = fullText;
+                    toggleBtn.textContent = "Show Less";
+                }
+                isExpanded = !isExpanded;
+            };
+        }
+    </script>
+    <style>
+        .dropdown {
+            position: absolute;
+            top: 40%;
+            right: 20%;
+        }
+        .dropbtn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+    </style>
+</body>
+</html>
