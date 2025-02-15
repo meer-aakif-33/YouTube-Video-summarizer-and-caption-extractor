@@ -12,7 +12,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     padding: 20px;
     flex-direction: column;
 }
@@ -23,49 +23,59 @@ body {
     background: #1f1f1f;
     padding: 10px 20px;
     display: flex;
-    justify-content: flex-start;
-}
-
-/* Dropdown */
-.dropdown {
-    position: relative;
-}
-
-.dropbtn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
     left: 0;
-    top: 40px;
-    background-color: #2a2a2a;
-    min-width: 200px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
-    overflow: hidden;
     z-index: 1000;
 }
 
-.dropdown-content a {
+.navbar .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #f8d210;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
     color: white;
-    padding: 12px 16px;
     text-decoration: none;
-    display: block;
-    transition: background 0.3s;
+    padding: 10px;
+    transition: color 0.3s;
 }
 
-.dropdown-content a:hover {
-    background: #444;
+.nav-links a:hover {
+    color: #f8d210;
 }
 
-.show {
-    display: block;
+.menu-icon {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: #1f1f1f;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: 100%;
+        text-align: center;
+    }
+    .nav-links.active {
+        display: flex;
+    }
+    .menu-icon {
+        display: block;
+    }
 }
 
 /* Container Styling */
@@ -77,13 +87,14 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     padding: 30px;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 80px;
 }
 
 /* Header */
 header h1 {
     font-size: 2rem;
     color: #f8d210;
+    margin-bottom: 10px;
 }
 
 header p {
@@ -94,12 +105,12 @@ header p {
 /* Form Styling */
 .form {
     margin-top: 20px;
-    
+    display: flex;
+    flex-direction: column;
     gap: 10px;
 }
 
 .input {
-    flex: 1;
     padding: 12px;
     border: none;
     border-radius: 25px;
@@ -128,6 +139,7 @@ header p {
 .btn:hover {
     background-color: #e6b800;
 }
+
 
 /* Response Styling */
 .response, .video-captions {
