@@ -140,8 +140,8 @@ def do_summarise():
     print(youtube_link)
     if youtube_link:
         print(f'received the youtube video link it is: {youtube_link}')
-        summary = f"Summary for the video at {youtube_link} and video id is {video_id}\n and captions are {video_captions} \n \n \n the Summary is {summary}"
-        return jsonify({"summary": summary})
+        # summary = f"Summary for the video at {youtube_link} and video id is {video_id}\n and captions are {video_captions} \n \n \n the Summary is {summary}"
+        return jsonify({"summary": summary, "video_captions": video_captions })
     else:
         return jsonify({"error": "YouTube link is required!"}), 400
 

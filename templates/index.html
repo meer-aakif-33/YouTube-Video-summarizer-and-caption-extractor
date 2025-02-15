@@ -1,44 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Video Summarizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h2>YouTube Video Summarizer</h2>
+            <p>Get a quick summary of any YouTube video with ease!</p>
+        </header>
+        <main>
+            <form id="summaryform" onsubmit="summarizeVideo(event)" class="form">
+                <input 
+                    type="text" 
+                    id="youtube_link" 
+                    name="youtube_link" 
+                    placeholder="Enter YouTube video link" 
+                    class="input"
+                    required
+                >
+                <button type="submit" class="btn">Summarize</button>
+            </form>
+            <div id="video-captions" class="video-captions"></div>
+            <div id="response" class="response"></div>
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Fetching summary, please wait...</p>
+            </div>
+        </main>
+        <footer>
+            <p>Developed by Shujath Nawaz, Meer Aakif</p>
+        </footer>
+    </div>
     <script>
         async function summarizeVideo(event) {
-            event.preventDefault()
+            event.preventDefault();
             const youtube_link = document.getElementById('youtube_link').value;
             const responsediv = document.getElementById('response');
-            if(!youtube_link){
-                responsediv.innerHTML = 'Please provide a Youtube Video Link';
+            const loadingdiv = document.getElementById('loading');
+            const captionsdiv = document.getElementById('video-captions');
+
+            responsediv.innerHTML = ""; // Clear previous response
+            loadingdiv.style.display = "flex"; // Show loading spinner
+
+            if (!youtube_link) {
+                loadingdiv.style.display = "none"; // Hide loading spinner
+                responsediv.innerHTML = '<p class="error">Please provide a valid YouTube video link.</p>';
                 return;
             }
-            try{
 
+            try {
                 const response = await fetch('/get-summarise', {
-                    method:'POST',
-                    headers:{
+                    method: 'POST',
+                    headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({youtube_link:youtube_link}),
-                })
-                if (response.ok){
-                    const data = await response.json();
-                    responsediv.innerHTML = `<p>Summary: ${data.summary}</p>`
-                } else {
-                    responsediv.innerHTML = `<p>Error: ${response.statusText}</p>`
-                }
+                    body: JSON.stringify({ youtube_link }),
+                });
 
+                loadingdiv.style.display = "none"; // Hide loading spinner
+
+                if (response.ok) {
+                    const data = await response.json();
+                    responsediv.innerHTML = `<p class="summary"><strong>Summary:</strong> ${data.summary}</p>`;
+                    captionsdiv.innerHTML = `<p class="captions"><strong>Video Captions:</strong> ${data.video_captions}</p>`;
+                } else {
+                    responsediv.innerHTML = `<p class="error">Error: ${response.statusText}</p>`;
+                }
             } catch (err) {
-                responsediv.innerHTML = `<p>Error : ${err.message}</p>`;
+                loadingdiv.style.display = "none"; // Hide loading spinner
+                responsediv.innerHTML = `<p class="error">Error: ${err.message}</p>`;
             }
         }
     </script>
-</head>
-<body>
-    <h1>Hello I am under Water</h1>
-    <form id="summaryform" onsubmit="summarizeVideo(event)">
-        <input type="text" id="youtube_link" name="youtube_link" placeholder="Enter YouTube link">
-        <button type="submit" >Summarise</button>
-    </form>
-    <div id="response" ></div>
 </body>
 </html>
