@@ -75,6 +75,8 @@
                     body: JSON.stringify({ youtube_link }),
                 });
 
+                document.getElementById('youtube_link').value = ""; 
+
                 loadingdiv.style.display = "none"; // Hide loading spinner
 
                 if (response.ok) {
@@ -105,7 +107,7 @@
                 <p class="captions"><strong>Video Captions:</strong> 
                     <span id="caption-text">${shortText}</span>
                 </p>
-                <button id="toggle-btn" class="btn morebtn" onclick="toggleCaptions()">Show More</button>
+                <button id="toggle-btn" class="morebtn" onclick="toggleCaptions()">Show More</button>
             `;
             captionsdiv.style.display = "block"; 
 

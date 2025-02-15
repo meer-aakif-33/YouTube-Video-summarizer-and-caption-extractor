@@ -7,7 +7,9 @@
 }
 
 body {
-    background-color: #121212;
+    background: linear-gradient(135deg, #1B1F3B, #4E148C, #FF5733, #FFC300);
+    background: linear-gradient(135deg, #0F2027, #203A43, #2C5364, #A8EB12);
+
     color: #ffffff;
     display: flex;
     justify-content: center;
@@ -20,7 +22,8 @@ body {
 /* Navbar */
 .navbar {
     width: 100%;
-    background: #1f1f1f;
+    background: rgba(31, 31, 31, 0.6); /* Semi-transparent dark background */
+    backdrop-filter: blur(1px); /* Blurry glass effect */
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -29,8 +32,10 @@ body {
     top: 0;
     left: 0;
     z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+    transition: all 0.3s ease-in-out;
 }
-
 .navbar .logo {
     font-size: 1.5rem;
     font-weight: bold;
@@ -46,17 +51,52 @@ body {
     color: white;
     text-decoration: none;
     padding: 10px;
-    transition: color 0.3s;
+    font-size: 18px;
+    padding: 8px 12px;
+    transition: color 0.3s ease-in-out;
+    font-weight: bold;
 }
 
-.nav-links a:hover {
-    color: #f8d210;
+
+.navbar a:hover {
+    color: #ff9900; /* Highlight color on hover */
 }
 
 .menu-icon {
     display: none;
     font-size: 24px;
     cursor: pointer;
+}
+.textarea {
+    width: 100%;
+    max-width: 600px;
+    height: 200px;
+    padding: 15px;
+    font-size: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    outline: none;
+    resize: none;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Beautiful focus effect */
+.textarea:focus {
+    border-color: #ff9900;
+    box-shadow: 0px 0px 15px rgba(255, 153, 0, 0.6);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Placeholder styling */
+.textarea::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    font-style: italic;
 }
 
 @media (max-width: 768px) {
@@ -126,19 +166,33 @@ header p {
 }
 
 .btn {
-    background-color: #f8d210;
+    background: linear-gradient(135deg, #f8d210, #ffae00);
     color: #121212;
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 1rem;
+    font-weight: bold;
     border: none;
-    border-radius: 25px;
+    border-radius: 30px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(255, 175, 0, 0.3);
+    position: relative;
+    overflow: hidden;
 }
 
+/* Beautiful hover effect */
 .btn:hover {
-    background-color: #e6b800;
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    box-shadow: 0 6px 15px rgba(255, 140, 0, 0.5);
+    transform: translateY(-2px);
 }
+
+/* Button press effect */
+.btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 5px rgba(255, 140, 0, 0.4);
+}
+
 
 .morebtn{
     background-color: transparent;
@@ -198,4 +252,75 @@ footer {
     margin-top: 20px;
     font-size: 0.9rem;
     color: #bdbdbd;
+}
+
+
+/* Summary Box */
+.response {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    color: #ffffff;
+    font-size: 16px;
+    text-align: left;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Summary Text */
+.summary {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #f8d210;
+    font-weight: bold;
+}
+
+/* Captions Box */
+.video-captions {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    color: #ffffff;
+    font-size: 16px;
+    text-align: left;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Captions Text */
+.captions {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #ffae00;
+    font-weight: bold;
+}
+
+/* Show More / Show Less Button */
+.morebtn {
+    background: linear-gradient(135deg, #ffae00, #ff6b00);
+    color: #121212;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-top: 10px;
+    display: block;
+}
+
+.morebtn:hover {
+    background: linear-gradient(135deg, #ffd700, #ff4500);
+    transform: scale(1.05);
+}
+
+.morebtn:active {
+    transform: scale(0.95);
 }
