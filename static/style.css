@@ -140,7 +140,19 @@ header p {
     background-color: #e6b800;
 }
 
-
+.morebtn{
+    background-color: transparent;
+    color: yellow;
+    font-size: 1rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 0;
+}
+.morebtn:hover {
+    background-color: transparent;
+}
 /* Response Styling */
 .response, .video-captions {
     margin-top: 20px;
