@@ -1,6 +1,5 @@
 import os
-# import whisper
-import openai_whisper as whisper
+import whisper
 from pytube import YouTube
 from flask import Flask, request,render_template, jsonify, redirect
 import re
