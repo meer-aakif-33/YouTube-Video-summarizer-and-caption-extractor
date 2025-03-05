@@ -1,4 +1,5 @@
 import os
+# import whisper
 import whisper
 from pytube import YouTube
 from flask import Flask, request,render_template, jsonify, redirect
@@ -171,4 +172,5 @@ def do_summarise():
 
 
 if __name__ == '__main__':
-    app.run(port=8000, debug=True)
+    # app.run(port=8000, debug=True)
+    app.run(host='0.0.0.0', port=8000)  # Ensure correct port binding
