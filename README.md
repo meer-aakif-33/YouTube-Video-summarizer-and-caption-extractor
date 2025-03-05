@@ -19,6 +19,17 @@ This is a Flask-based web application that extracts captions from a YouTube vide
 - Transformers (BART)
 - yt-dlp
 - HTML, CSS, JavaScript
+- 
+## Preview
+
+![Image](https://github.com/user-attachments/assets/6e0a0aeb-6bfe-416e-979a-a06c86dab4fd)
+
+![Image](https://github.com/user-attachments/assets/04c38f57-ede5-443f-a0db-3de7f684165e)
+
+![Image](https://github.com/user-attachments/assets/4ec37780-df30-4efd-abc6-96b2f8931d09)
+
+![Image](https://github.com/user-attachments/assets/7220ff05-d8c3-41b1-b3bc-04970abb9224)
+
 
 ## Installation
 ### Prerequisites
