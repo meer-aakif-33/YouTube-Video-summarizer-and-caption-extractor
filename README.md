@@ -1,7 +1,7 @@
 # YouTube Video Summarizer
 
 ## Description
-This is a Flask-based web application that extracts captions from a YouTube video and provides a summarized version of the content using AI-powered NLP models.
+This is a Flask-based web application that extracts captions from a YouTube video (Even if it is a non-caption video) and provides a summarized version of the content using AI-powered NLP models.
 
 ## Features
 - Extracts captions from YouTube videos.
